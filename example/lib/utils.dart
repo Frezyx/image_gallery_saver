@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_gallery_saver_example/dialog.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-import 'dialog.dart';
 
 class Utils {
   static void toast(String msg) {
@@ -24,13 +23,13 @@ class PermissionUtil {
   /// 安卓权限
   static List<Permission> androidPermissions = <Permission>[
     // 在这里添加需要的权限
-    Permission.storage
+    Permission.storage,
   ];
 
   /// ios权限
   static List<Permission> iosPermissions = <Permission>[
     // 在这里添加需要的权限
-    Permission.storage
+    Permission.storage,
   ];
 
   static Future<Map<Permission, PermissionStatus>> requestAll() async {
@@ -41,7 +40,8 @@ class PermissionUtil {
   }
 
   static Future<Map<Permission, PermissionStatus>> request(
-      Permission permission) async {
+    Permission permission,
+  ) async {
     final List<Permission> permissions = <Permission>[permission];
     return await permissions.request();
   }
@@ -59,12 +59,13 @@ class PermissionUtil {
 
   static void showDeniedDialog(BuildContext context) {
     HDialog.show(
-        context: context,
-        title: '权限申请异常',
-        content: '请在【应用信息】-【权限管理】中，开启全部所需权限，以正常使用惠爆单功能',
-        options: <DialogAction>[
-          DialogAction(text: '去设置', onPressed: () => openAppSettings())
-        ]);
+      context: context,
+      title: '权限申请异常',
+      content: '请在【应用信息】-【权限管理】中，开启全部所需权限，以正常使用惠爆单功能',
+      options: <DialogAction>[
+        DialogAction(text: '去设置', onPressed: () => openAppSettings()),
+      ],
+    );
   }
 
   /// 检查权限

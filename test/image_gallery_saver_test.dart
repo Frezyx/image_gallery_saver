@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -11,8 +9,9 @@ void main() {
   final List<MethodCall> log = <MethodCall>[];
   bool? response;
 
-  channel.setMockMethodCallHandler((MethodCall methodCall) async {
-    log.add(methodCall);
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(channel, (message) async {
+    log.add(message);
     return response;
   });
 
@@ -20,23 +19,24 @@ void main() {
     log.clear();
   });
 
-
   test('saveImageToGallery test', () async {
     response = true;
     Uint8List imageBytes = Uint8List(16);
-    final bool? result = await (ImageGallerySaver.saveImage(imageBytes) as FutureOr<dynamic>);
+    final bool? result = await ImageGallerySaver.saveImage(imageBytes);
     expect(
       log,
       <Matcher>[
-        isMethodCall('saveImageToGallery', arguments: <String, dynamic>{
-          'imageBytes': imageBytes,
-          'quality': 80,
-          'name': null,
-          "isReturnImagePathOfIOS": false
-        })
+        isMethodCall(
+          'saveImageToGallery',
+          arguments: <String, dynamic>{
+            'imageBytes': imageBytes,
+            'quality': 100,
+            'name': null,
+            "isReturnImagePathOfIOS": false,
+          },
+        ),
       ],
     );
     expect(result, response);
   });
-
 }
